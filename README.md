@@ -1,84 +1,27 @@
-# Turborepo starter
+## Hello Georgi, In this readme file I will be explaining how to run the two apps and what I have done and what I have not done
 
-This Turborepo starter is maintained by the Turborepo core team.
+So, once the repo is cloned from my github and you are in vscode:
 
-## Using this example
+1. cd apps/betfinal.
+2. npm install
+3. npm run dev
+4. open local host in your browser and navigate through the login, afte you click login and see the ui, you will get sent to the login screen. Here you can use any of the usernames in the user data thats in the json file. Once you log in successfuly you will see an option to deposit and also some bonuses if KYC aproved, if not bonus shop will be empty.(KYC only for approved user for cosmoswin)
 
-Run the following command:
+## cosmoswin
 
-```sh
-npx create-turbo@latest
-```
+1. cd .. to get out after ending the dev server
+2. cd cosmoswin
+3. npm install
+4. npm run dev and do the same things as in the betfinal app
 
-## What's inside?
 
-This Turborepo includes the following packages/apps:
+## some other things to note
 
-### Apps and Packages
+I did not translate into Arabic.(Cvetelina mentioned not everything has to be complete so I figured I would leave that part out) However I believe everything else is done as it should be. If not please let me know and I will try and better it or re-work it.
+Both apps are responsive for mobile devices
+Bonuses and user data are stored in the root. Less reppetition.
+Only client side rendering is being used in both apps
+I beleive the setup and structure are quite straight forward and easy to maintain and are also structured well.
+Bonuses are simulated so the user can clain if KYC policies align and other things align. 
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)

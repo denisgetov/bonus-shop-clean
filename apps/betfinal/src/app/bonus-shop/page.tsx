@@ -1,27 +1,47 @@
 'use client';
 
+import { useState } from 'react';
 import { useUser } from '@/context/userContext';
 import bonusesRaw from 'shared/data/bonuses.json';
-import { filterBonuses } from 'shared/utils/bonusFilter';
 import { Bonus } from 'shared/types';
 
-export default function BonusShopPage() {
+interface ExtendedBonus extends Bonus {
+  requiresKYC: boolean;
+  depositCountMin?: number;
+  depositCountMax?: number;
+  balanceMustBeZero?: boolean;
+  registrationWithinLastDays?: number;
+  availableCountries?: string[];
+}
+
+const isWithinLastDays = (dateString: string, days: number) => {
+  const now = new Date();
+  const date = new Date(dateString);
+  const diffTime = now.getTime() - date.getTime();
+  const diffDays = diffTime / (1000 * 3600 * 24);
+  return diffDays <= days;
+};
+
+export default function BetfinalBonusShopPage() {
   const { user } = useUser();
+  const [claimedBonuses, setClaimedBonuses] = useState<string[]>([]);
 
   if (!user) {
     return (
-      <p style={{ 
-        color: '#d4af37', 
-        textAlign: 'center', 
-        marginTop: '2rem', 
-        fontFamily: 'Arial, sans-serif' 
-      }}>
+      <p
+        style={{
+          color: '#FFD700', // Gold
+          textAlign: 'center',
+          marginTop: '2rem',
+          fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+        }}
+      >
         Please log in to view your bonuses.
       </p>
     );
   }
 
-  const isValidBonus = (bonus: any): bonus is Bonus => {
+  const isValidBonus = (bonus: any): bonus is ExtendedBonus => {
     return (
       typeof bonus.id === 'string' &&
       typeof bonus.brand === 'string' &&
@@ -32,7 +52,56 @@ export default function BonusShopPage() {
   };
 
   const bonuses = (bonusesRaw as any[]).filter(isValidBonus);
-  const eligibleBonuses = filterBonuses(user, bonuses, 'betfinal');
+
+  const isBonusEligible = (bonus: ExtendedBonus) => {
+    if (bonus.brand !== 'betfinal') return false;
+
+    if (bonus.availableCountries && bonus.availableCountries.length > 0) {
+      if (!bonus.availableCountries.includes(user.country)) {
+        return false;
+      }
+    }
+
+    if (
+      typeof bonus.depositCountMin === 'number' &&
+      user.depositCount < bonus.depositCountMin
+    ) {
+      return false;
+    }
+
+    if (
+      typeof bonus.depositCountMax === 'number' &&
+      user.depositCount > bonus.depositCountMax
+    ) {
+      return false;
+    }
+
+    if (bonus.requiresKYC && !user.isKYCApproved) {
+      return false;
+    }
+
+    if (bonus.balanceMustBeZero && user.currentBalance !== 0) {
+      return false;
+    }
+
+    if (
+      typeof bonus.registrationWithinLastDays === 'number' &&
+      !isWithinLastDays(user.registrationDate, bonus.registrationWithinLastDays)
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const eligibleBonuses = bonuses.filter(isBonusEligible);
+
+  const handleClaim = (bonusId: string) => {
+    if (!claimedBonuses.includes(bonusId)) {
+      setClaimedBonuses((prev) => [...prev, bonusId]);
+      alert(`Bonus "${bonuses.find((b) => b.id === bonusId)?.name.en}" claimed!`);
+    }
+  };
 
   return (
     <div
@@ -40,35 +109,98 @@ export default function BonusShopPage() {
         maxWidth: 600,
         margin: '2rem auto',
         padding: '2rem',
-        backgroundColor: '#000000',
-        color: '#d4af37',
-        border: '2px solid #d4af37',
-        borderRadius: 0,
-        fontFamily: 'Arial, sans-serif',
-        boxSizing: 'border-box',
+        backgroundColor: '#000000', // Black background
+        color: '#FFD700', // Gold text
+        fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+        boxShadow: '0 0 15px #FFD700', // glowing gold shadow
       }}
     >
-      <h1 style={{ marginBottom: '1.5rem', fontWeight: 'bold', fontSize: '2rem' }}>
-        Bonus Shop
+      <h1
+        style={{
+          fontSize: '2rem',
+          marginBottom: '1.5rem',
+          textAlign: 'center',
+          textShadow: '0 0 10px #FFD700',
+        }}
+      >
+        Betfinal Bonus Shop
       </h1>
-
       {eligibleBonuses.length > 0 ? (
-        <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
+        <ul
+          style={{
+            listStyle: 'none',
+            padding: 0,
+            margin: 0,
+            display: 'grid',
+            gridTemplateColumns: '1fr',
+            gap: '1rem',
+          }}
+        >
           {eligibleBonuses.map((bonus) => (
             <li
               key={bonus.id}
               style={{
-                borderBottom: '1px solid #d4af37',
-                padding: '1rem 0',
-                fontSize: '1.2rem',
+                backgroundColor: '#1a1a1a', // very dark gray/black
+                padding: '1rem 1.5rem',
+                boxShadow: '0 0 8px #FFD700',
+                cursor: 'default',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                // NO border radius
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.03)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
             >
-              <strong>{bonus.name.en}</strong>
+              <div>
+                <strong style={{ fontSize: '1.25rem', color: '#FFD700' }}>{bonus.name.en}</strong>
+                {bonus.description?.en && (
+                  <p style={{ marginTop: '0.25rem', fontSize: '0.9rem', color: '#ffea7f' }}>
+                    {bonus.description.en}
+                  </p>
+                )}
+              </div>
+              <button
+                onClick={() => handleClaim(bonus.id)}
+                disabled={claimedBonuses.includes(bonus.id)}
+                style={{
+                  padding: '0.5rem 1rem',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  border: 'none',
+                  backgroundColor: claimedBonuses.includes(bonus.id)
+                    ? '#7f6b00'
+                    : '#ffd700',
+                  color: '#000000',
+                  cursor: claimedBonuses.includes(bonus.id) ? 'default' : 'pointer',
+                  transition: 'background-color 0.3s ease',
+                  // NO border radius
+                }}
+                onMouseEnter={(e) => {
+                  if (!claimedBonuses.includes(bonus.id)) {
+                    e.currentTarget.style.backgroundColor = '#e6c200';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!claimedBonuses.includes(bonus.id)) {
+                    e.currentTarget.style.backgroundColor = '#ffd700';
+                  }
+                }}
+              >
+                {claimedBonuses.includes(bonus.id) ? 'Claimed' : 'Claim'}
+              </button>
             </li>
           ))}
         </ul>
       ) : (
-        <p style={{ fontStyle: 'italic', fontSize: '1.1rem' }}>
+        <p
+          style={{
+            color: '#FFD700',
+            textAlign: 'center',
+            fontStyle: 'italic',
+            marginTop: '1rem',
+          }}
+        >
           No bonuses available for you right now.
         </p>
       )}

@@ -11,7 +11,7 @@ const Deposit = () => {
 
   if (!user) {
     return (
-      <p style={{ color: '#d4af37', textAlign: 'center', marginTop: '2rem' }}>
+      <p style={{ color: '#d4af37', textAlign: 'center', marginTop: '2rem', fontSize: '1.2rem' }}>
         Please log in to make a deposit.
       </p>
     );
@@ -33,19 +33,23 @@ const Deposit = () => {
   return (
     <div
       style={{
-        maxWidth: 400,
-        margin: '2rem auto',
-        padding: '2rem',
+        maxWidth: 420,
+        margin: '3rem auto',
+        padding: '2.5rem',
         border: '2px solid #d4af37',
         borderRadius: 0,
         backgroundColor: '#000000',
         color: '#d4af37',
         fontFamily: '"Arial", sans-serif',
         textAlign: 'center',
+        boxShadow: '0 0 15px #d4af37',
       }}
     >
-      <h3 style={{ marginBottom: '1.5rem', fontSize: '1.5rem' }}>Deposit Money</h3>
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1rem' }}>
+      <h2 style={{ marginBottom: '2rem', fontSize: '1.75rem', fontWeight: 'bold' }}>
+        Deposit Money
+      </h2>
+
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
         <input
           type="number"
           placeholder="Enter amount"
@@ -58,15 +62,19 @@ const Deposit = () => {
             backgroundColor: '#121212',
             color: '#d4af37',
             fontSize: '1rem',
-            width: '150px',
+            width: '160px',
             textAlign: 'center',
+            outline: 'none',
+            transition: 'border-color 0.2s ease',
           }}
           min="0"
+          onFocus={(e) => (e.currentTarget.style.borderColor = '#fff')}
+          onBlur={(e) => (e.currentTarget.style.borderColor = '#d4af37')}
         />
         <button
           onClick={handleDeposit}
           style={{
-            padding: '0.75rem 1.5rem',
+            padding: '0.75rem 1.8rem',
             border: '2px solid #d4af37',
             borderRadius: 0,
             backgroundColor: 'transparent',
@@ -91,25 +99,34 @@ const Deposit = () => {
 
       {/* Error Message */}
       {error && (
-        <p style={{ color: '#ff4d4f', fontWeight: 'bold', marginBottom: '1rem' }}>
+        <p style={{ color: '#ff4d4f', fontWeight: 'bold', marginBottom: '1.5rem' }}>
           {error}
         </p>
       )}
 
       {/* Success Message */}
       {success && (
-        <p style={{ color: '#4caf50', fontWeight: 'bold', marginBottom: '1rem' }}>
+        <p style={{ color: '#4caf50', fontWeight: 'bold', marginBottom: '1.5rem' }}>
           {success}
         </p>
       )}
 
-      <div style={{ fontSize: '1.1rem' }}>
-        <p>
-          <strong>Balance:</strong> ${user.currentBalance.toFixed(2)}
-        </p>
-        <p>
-          <strong>Deposits made:</strong> {user.depositCount}
-        </p>
+      <div
+        style={{
+          textAlign: 'left',
+          fontSize: '1.1rem',
+          lineHeight: '1.6',
+          maxWidth: '300px',
+          margin: '0 auto',
+          color: '#d4af37',
+          userSelect: 'none',
+        }}
+      >
+        <p><strong>Username:</strong> {user.username}</p>
+        <p><strong>Country:</strong> {user.country}</p>
+        <p><strong>Registration Date:</strong> {user.registrationDate}</p>
+        <p><strong>Deposits made:</strong> {user.depositCount}</p>
+        <p><strong>Balance:</strong> ${user.currentBalance.toFixed(2)}</p>
       </div>
     </div>
   );
