@@ -1,0 +1,31 @@
+.page {
+  background-color: #dcc4c4; 
+  color: #d4af37; 
+  font-family: "Georgia", serif; 
+  border-radius: 0;
+  padding: 80px;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 20px 1fr 20px;
+  align-items: center;
+  justify-items: center;
+  gap: 64px;
+}
+
+a.primary {
+  background-color: #d4af37;
+  color: #000; 
+  border-radius: 0;
+  transition: background-color 0.2s ease;
+}
+
+a.primary:hover {
+  background-color: #b2932f;
+}
+
+button, .card {
+  border-radius: 0; 
+  background-color: #000;
+  color: #d4af37;
+  border: 1px solid #d4af37;
+}
