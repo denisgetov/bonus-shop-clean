@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useUser } from '@/context/UserContext';
+import styles from './components.module.css';
 
 const Login = () => {
   const { login, user } = useUser();
@@ -23,82 +24,37 @@ const Login = () => {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: 400,
-        margin: '3rem auto',
-        padding: '2rem',
-        backgroundColor: 'transparent',
-        color: '#00e0ff', // cyan text
-        border: '2px solid #00e0ff', // cyan border
-        borderRadius: '12px', // rounded corners
-        fontFamily: '"Arial", sans-serif',
-        textAlign: 'center',
-      }}
-    >
-      <style>
-        {`
-          input::placeholder {
-            color: #00e0ff;
-            opacity: 1; /* Firefox */
-          }
-        `}
-      </style>
-
+    <div className={styles.loginContainer}>
       {!user ? (
         <>
-          <h2 style={{ marginBottom: '1.5rem', fontSize: '1.75rem' }}>
-            Login to Cosmoswin
-          </h2>
+          <h2 className={styles.loginTitle}>Login to Cosmoswin</h2>
           <input
             type="text"
             placeholder="Enter username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              marginBottom: '1rem',
-              border: '2px solid #00e0ff',
-              borderRadius: '8px',
-              backgroundColor: 'transparent',
-              color: '#00e0ff',
-              fontSize: '1rem',
-            }}
+            className={styles.loginInput}
           />
           <button
             onClick={handleLogin}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '2px solid #00e0ff',
-              borderRadius: '8px',
-              backgroundColor: 'transparent',
-              color: '#00e0ff',
-              fontWeight: 'bold',
-              fontSize: '1rem',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s, color 0.2s',
+            className={styles.loginButton}
+            onMouseEnter={(e) => {
+              e.currentTarget.classList.add(styles.hovered);
             }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#00e0ff';
-              (e.currentTarget as HTMLButtonElement).style.color = '#1e1f6a';
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
-              (e.currentTarget as HTMLButtonElement).style.color = '#00e0ff';
+            onMouseLeave={(e) => {
+              e.currentTarget.classList.remove(styles.hovered);
             }}
           >
             Login
           </button>
           {error && (
-            <p style={{ color: '#ff6f91', marginTop: '1rem', fontWeight: 'bold' }}>
+            <p className={styles.loginError}>
               {error}
             </p>
           )}
         </>
       ) : (
-        <p style={{ fontSize: '1.25rem' }}>
+        <p className={styles.loginWelcome}>
           Welcome, <strong>{user.username}</strong>!
         </p>
       )}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useUser } from '@/context/userContext';
+import styles from './components.module.css';
 
 const Deposit = () => {
   const { user, deposit } = useUser();
@@ -11,7 +12,7 @@ const Deposit = () => {
 
   if (!user) {
     return (
-      <p style={{ color: '#d4af37', textAlign: 'center', marginTop: '2rem', fontSize: '1.2rem' }}>
+      <p className={styles.loginReminder}>
         Please log in to make a deposit.
       </p>
     );
@@ -31,97 +32,40 @@ const Deposit = () => {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: 420,
-        margin: '3rem auto',
-        padding: '2.5rem',
-        border: '2px solid #d4af37',
-        borderRadius: 0,
-        backgroundColor: '#000000',
-        color: '#d4af37',
-        fontFamily: '"Arial", sans-serif',
-        textAlign: 'center',
-        boxShadow: '0 0 15px #d4af37',
-      }}
-    >
-      <h2 style={{ marginBottom: '2rem', fontSize: '1.75rem', fontWeight: 'bold' }}>
-        Deposit Money
-      </h2>
+    <div className={styles.depositContainer}>
+      <h2 className={styles.depositHeading}>Deposit Money</h2>
 
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div className={styles.depositForm}>
         <input
           type="number"
           placeholder="Enter amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          style={{
-            padding: '0.75rem',
-            border: '2px solid #d4af37',
-            borderRadius: 0,
-            backgroundColor: '#121212',
-            color: '#d4af37',
-            fontSize: '1rem',
-            width: '160px',
-            textAlign: 'center',
-            outline: 'none',
-            transition: 'border-color 0.2s ease',
-          }}
+          className={styles.depositInput}
           min="0"
-          onFocus={(e) => (e.currentTarget.style.borderColor = '#fff')}
+          onFocus={(e) => (e.currentTarget.style.borderColor = '#ffffff')}
           onBlur={(e) => (e.currentTarget.style.borderColor = '#d4af37')}
         />
         <button
           onClick={handleDeposit}
-          style={{
-            padding: '0.75rem 1.8rem',
-            border: '2px solid #d4af37',
-            borderRadius: 0,
-            backgroundColor: 'transparent',
-            color: '#d4af37',
-            fontWeight: 'bold',
-            fontSize: '1rem',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s, color 0.2s',
+          className={styles.depositButton}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#d4af37';
+            e.currentTarget.style.color = '#000000';
           }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#d4af37';
-            (e.currentTarget as HTMLButtonElement).style.color = '#000000';
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
-            (e.currentTarget as HTMLButtonElement).style.color = '#d4af37';
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.color = '#d4af37';
           }}
         >
           Deposit
         </button>
       </div>
 
-      {/* Error Message */}
-      {error && (
-        <p style={{ color: '#ff4d4f', fontWeight: 'bold', marginBottom: '1.5rem' }}>
-          {error}
-        </p>
-      )}
+      {error && <p className={styles.errorText}>{error}</p>}
+      {success && <p className={styles.successText}>{success}</p>}
 
-      {/* Success Message */}
-      {success && (
-        <p style={{ color: '#4caf50', fontWeight: 'bold', marginBottom: '1.5rem' }}>
-          {success}
-        </p>
-      )}
-
-      <div
-        style={{
-          textAlign: 'left',
-          fontSize: '1.1rem',
-          lineHeight: '1.6',
-          maxWidth: '300px',
-          margin: '0 auto',
-          color: '#d4af37',
-          userSelect: 'none',
-        }}
-      >
+      <div className={styles.userInfo}>
         <p><strong>Username:</strong> {user.username}</p>
         <p><strong>Country:</strong> {user.country}</p>
         <p><strong>Registration Date:</strong> {user.registrationDate}</p>

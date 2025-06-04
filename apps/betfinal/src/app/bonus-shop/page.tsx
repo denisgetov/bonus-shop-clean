@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useUser } from '@/context/userContext';
 import bonusesRaw from 'shared/data/bonuses.json';
 import { Bonus } from 'shared/types';
+import styles from './betfinalBonusShopPage.module.css';
 
 interface ExtendedBonus extends Bonus {
   requiresKYC: boolean;
@@ -27,18 +28,7 @@ export default function BetfinalBonusShopPage() {
   const [claimedBonuses, setClaimedBonuses] = useState<string[]>([]);
 
   if (!user) {
-    return (
-      <p
-        style={{
-          color: '#FFD700', // Gold
-          textAlign: 'center',
-          marginTop: '2rem',
-          fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-        }}
-      >
-        Please log in to view your bonuses.
-      </p>
-    );
+    return <p className={styles.loginMessage}>Please log in to view your bonuses.</p>;
   }
 
   const isValidBonus = (bonus: any): bonus is ExtendedBonus => {
@@ -56,10 +46,8 @@ export default function BetfinalBonusShopPage() {
   const isBonusEligible = (bonus: ExtendedBonus) => {
     if (bonus.brand !== 'betfinal') return false;
 
-    if (bonus.availableCountries && bonus.availableCountries.length > 0) {
-      if (!bonus.availableCountries.includes(user.country)) {
-        return false;
-      }
+    if (bonus.availableCountries?.length && !bonus.availableCountries.includes(user.country)) {
+      return false;
     }
 
     if (
@@ -104,78 +92,24 @@ export default function BetfinalBonusShopPage() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: 600,
-        margin: '2rem auto',
-        padding: '2rem',
-        backgroundColor: '#000000', // Black background
-        color: '#FFD700', // Gold text
-        fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-        boxShadow: '0 0 15px #FFD700', // glowing gold shadow
-      }}
-    >
-      <h1
-        style={{
-          fontSize: '2rem',
-          marginBottom: '1.5rem',
-          textAlign: 'center',
-          textShadow: '0 0 10px #FFD700',
-        }}
-      >
-        Betfinal Bonus Shop
-      </h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Betfinal Bonus Shop</h1>
       {eligibleBonuses.length > 0 ? (
-        <ul
-          style={{
-            listStyle: 'none',
-            padding: 0,
-            margin: 0,
-            display: 'grid',
-            gridTemplateColumns: '1fr',
-            gap: '1rem',
-          }}
-        >
+        <ul className={styles.bonusList}>
           {eligibleBonuses.map((bonus) => (
-            <li
-              key={bonus.id}
-              style={{
-                backgroundColor: '#1a1a1a', // very dark gray/black
-                padding: '1rem 1.5rem',
-                boxShadow: '0 0 8px #FFD700',
-                cursor: 'default',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                // NO border radius
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.03)')}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-            >
+            <li key={bonus.id} className={styles.bonusItem}>
               <div>
-                <strong style={{ fontSize: '1.25rem', color: '#FFD700' }}>{bonus.name.en}</strong>
+                <strong className={styles.bonusName}>{bonus.name.en}</strong>
                 {bonus.description?.en && (
-                  <p style={{ marginTop: '0.25rem', fontSize: '0.9rem', color: '#ffea7f' }}>
-                    {bonus.description.en}
-                  </p>
+                  <p className={styles.bonusDescription}>{bonus.description.en}</p>
                 )}
               </div>
               <button
                 onClick={() => handleClaim(bonus.id)}
                 disabled={claimedBonuses.includes(bonus.id)}
-                style={{
-                  padding: '0.5rem 1rem',
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  border: 'none',
-                  backgroundColor: claimedBonuses.includes(bonus.id)
-                    ? '#7f6b00'
-                    : '#ffd700',
-                  color: '#000000',
-                  cursor: claimedBonuses.includes(bonus.id) ? 'default' : 'pointer',
-                  transition: 'background-color 0.3s ease',
-                  // NO border radius
-                }}
+                className={`${styles.claimButton} ${
+                  claimedBonuses.includes(bonus.id) ? styles.claimedButton : ''
+                }`}
                 onMouseEnter={(e) => {
                   if (!claimedBonuses.includes(bonus.id)) {
                     e.currentTarget.style.backgroundColor = '#e6c200';
@@ -193,16 +127,7 @@ export default function BetfinalBonusShopPage() {
           ))}
         </ul>
       ) : (
-        <p
-          style={{
-            color: '#FFD700',
-            textAlign: 'center',
-            fontStyle: 'italic',
-            marginTop: '1rem',
-          }}
-        >
-          No bonuses available for you right now.
-        </p>
+        <p className={styles.noBonusesText}>No bonuses available for you right now.</p>
       )}
     </div>
   );

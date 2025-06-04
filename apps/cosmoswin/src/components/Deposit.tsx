@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useUser } from '@/context/UserContext';
+import styles from './components.module.css';
 
 const Deposit = () => {
   const { user, deposit } = useUser();
@@ -11,7 +12,7 @@ const Deposit = () => {
 
   if (!user) {
     return (
-      <p style={{ color: '#6a11cb', textAlign: 'center', marginTop: '2rem', fontSize: '1.2rem' }}>
+      <p className={styles.loginMessage}>
         Please log in to make a deposit.
       </p>
     );
@@ -32,80 +33,27 @@ const Deposit = () => {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: '420px',
-        margin: '3rem auto',
-        padding: '2.5rem',
-        background: 'transparent',
-        borderRadius: '16px',
-        border: '2px solid transparent',
-        boxShadow: '0 0 20px rgba(0, 224, 255, 0.3)',
-        color: '#e0f7fa',
-        fontFamily: 'Segoe UI, sans-serif',
-        textAlign: 'center',
-      }}
-    >
-      <h2 style={{ fontSize: '1.75rem', marginBottom: '1.5rem', color: '#00e0ff' }}>
-        💰 Deposit Funds
-      </h2>
+    <div className={styles.depositContainer}>
+      <h2 className={styles.heading}>💰 Deposit Funds</h2>
 
-      <div style={{ marginBottom: '1.25rem' }}>
+      <div className={styles.inputGroup}>
         <input
           type="number"
           placeholder="Enter amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '0.75rem 1rem',
-            fontSize: '1rem',
-            borderRadius: '10px',
-            border: '2px solid #00e0ff',
-            backgroundColor: 'rgba(255,255,255,0.05)',
-            color: '#00e0ff',
-            outline: 'none',
-            marginBottom: '1rem',
-            transition: 'border-color 0.2s ease',
-          }}
+          className={styles.inputField}
         />
 
-        <button
-          onClick={handleDeposit}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            fontSize: '1rem',
-            fontWeight: 600,
-            borderRadius: '10px',
-            border: 'none',
-            background: 'linear-gradient(135deg, #00e0ff, #6a11cb)',
-            color: '#121230',
-            cursor: 'pointer',
-            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.03)';
-            e.currentTarget.style.boxShadow = '0 0 10px #00e0ff';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
+        <button onClick={handleDeposit} className={styles.depositButton}>
           Deposit
         </button>
       </div>
 
-      {error && (
-        <p style={{ color: '#ff6f91', fontWeight: 'bold', marginBottom: '1rem' }}>{error}</p>
-      )}
+      {error && <p className={styles.errorMessage}>{error}</p>}
+      {success && <p className={styles.successMessage}>{success}</p>}
 
-      {success && (
-        <p style={{ color: '#00ff9d', fontWeight: 'bold', marginBottom: '1rem' }}>{success}</p>
-      )}
-
-      <div style={{ textAlign: 'left', fontSize: '1rem', lineHeight: '1.6', color: '#b2ebf2' }}>
+      <div className={styles.userDetails}>
         <p><strong>👤 Username:</strong> {user.username}</p>
         <p><strong>🌍 Country:</strong> {user.country}</p>
         <p><strong>📅 Registered:</strong> {user.registrationDate}</p>

@@ -1,0 +1,1 @@
+// would normally have a file like this and use Jest but not doing it now also would have a jest.config.ts in the root along with a jest.setup.ts

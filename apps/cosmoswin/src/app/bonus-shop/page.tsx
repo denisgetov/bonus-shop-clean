@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useUser } from '@/context/UserContext';
 import bonusesRaw from 'shared/data/bonuses.json';
 import { Bonus } from 'shared/types';
+import styles from './cosmoswinBonusShopPage.module.css';
 
 interface ExtendedBonus extends Bonus {
   requiresKYC: boolean;
@@ -27,18 +28,7 @@ export default function BetfinalBonusShopPage() {
   const [claimedBonuses, setClaimedBonuses] = useState<string[]>([]);
 
   if (!user) {
-    return (
-      <p
-        style={{
-          color: '#00ffff',
-          textAlign: 'center',
-          marginTop: '2rem',
-          fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-        }}
-      >
-        Please log in to view your bonuses.
-      </p>
-    );
+    return <p className={styles.loginMessage}>Please log in to view your bonuses.</p>;
   }
 
   const isValidBonus = (bonus: any): bonus is ExtendedBonus => {
@@ -54,36 +44,22 @@ export default function BetfinalBonusShopPage() {
   const bonuses = (bonusesRaw as any[]).filter(isValidBonus);
 
   const isBonusEligible = (bonus: ExtendedBonus) => {
-    // Here change brand to 'betfinal'
     if (bonus.brand !== 'betfinal') return false;
 
-    if (bonus.availableCountries && bonus.availableCountries.length > 0) {
-      if (!bonus.availableCountries.includes(user.country)) {
-        return false;
-      }
-    }
-
-    if (
-      typeof bonus.depositCountMin === 'number' &&
-      user.depositCount < bonus.depositCountMin
-    ) {
+    if (bonus.availableCountries?.length && !bonus.availableCountries.includes(user.country)) {
       return false;
     }
 
-    if (
-      typeof bonus.depositCountMax === 'number' &&
-      user.depositCount > bonus.depositCountMax
-    ) {
+    if (typeof bonus.depositCountMin === 'number' && user.depositCount < bonus.depositCountMin) {
       return false;
     }
 
-    if (bonus.requiresKYC && !user.isKYCApproved) {
+    if (typeof bonus.depositCountMax === 'number' && user.depositCount > bonus.depositCountMax) {
       return false;
     }
 
-    if (bonus.balanceMustBeZero && user.currentBalance !== 0) {
-      return false;
-    }
+    if (bonus.requiresKYC && !user.isKYCApproved) return false;
+    if (bonus.balanceMustBeZero && user.currentBalance !== 0) return false;
 
     if (
       typeof bonus.registrationWithinLastDays === 'number' &&
@@ -105,90 +81,22 @@ export default function BetfinalBonusShopPage() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: 600,
-        margin: '2rem auto',
-        padding: '2rem',
-        borderRadius: '12px',
-        background: 'transparent',
-        color: '#ededed',
-        fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-        boxShadow:
-          '0 4px 10px rgba(106, 13, 173, 0.6), 0 6px 20px rgba(0, 255, 255, 0.3)',
-      }}
-    >
-      <h1
-        style={{
-          fontSize: '2rem',
-          marginBottom: '1.5rem',
-          textAlign: 'center',
-          textShadow: '0 0 8px #00ffff',
-        }}
-      >
-        Betfinal Bonus Shop
-      </h1>
+    <div className={styles.wrapper}>
+      <h1 className={styles.title}>Betfinal Bonus Shop</h1>
       {eligibleBonuses.length > 0 ? (
-        <ul
-          style={{
-            listStyle: 'none',
-            padding: 0,
-            display: 'grid',
-            gridTemplateColumns: '1fr',
-            gap: '1rem',
-          }}
-        >
+        <ul className={styles.bonusList}>
           {eligibleBonuses.map((bonus) => (
-            <li
-              key={bonus.id}
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                borderRadius: '8px',
-                padding: '1rem 1.5rem',
-                boxShadow: '0 2px 8px rgba(0, 255, 255, 0.3)',
-                transition: 'transform 0.3s ease',
-                cursor: 'default',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.03)')}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-            >
+            <li key={bonus.id} className={styles.bonusItem}>
               <div>
-                <strong style={{ fontSize: '1.25rem' }}>{bonus.name.en}</strong>
+                <strong className={styles.bonusTitle}>{bonus.name.en}</strong>
                 {bonus.description?.en && (
-                  <p style={{ marginTop: '0.25rem', fontSize: '0.9rem', color: '#b2ffff' }}>
-                    {bonus.description.en}
-                  </p>
+                  <p className={styles.bonusDescription}>{bonus.description.en}</p>
                 )}
               </div>
               <button
                 onClick={() => handleClaim(bonus.id)}
                 disabled={claimedBonuses.includes(bonus.id)}
-                style={{
-                  padding: '0.5rem 1rem',
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  borderRadius: '8px',
-                  border: 'none',
-                  backgroundColor: claimedBonuses.includes(bonus.id)
-                    ? 'rgba(106, 13, 173, 0.5)'
-                    : '#6a0dad',
-                  color: '#ededed',
-                  cursor: claimedBonuses.includes(bonus.id) ? 'default' : 'pointer',
-                  transition: 'background-color 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (!claimedBonuses.includes(bonus.id)) {
-                    e.currentTarget.style.backgroundColor = '#9400d3';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!claimedBonuses.includes(bonus.id)) {
-                    e.currentTarget.style.backgroundColor = '#6a0dad';
-                  }
-                }}
+                className={styles.button}
               >
                 {claimedBonuses.includes(bonus.id) ? 'Claimed' : 'Claim'}
               </button>
@@ -196,16 +104,7 @@ export default function BetfinalBonusShopPage() {
           ))}
         </ul>
       ) : (
-        <p
-          style={{
-            color: '#00ffff',
-            textAlign: 'center',
-            fontStyle: 'italic',
-            marginTop: '1rem',
-          }}
-        >
-          No bonuses available for you right now.
-        </p>
+        <p className={styles.emptyMessage}>No bonuses available for you right now.</p>
       )}
     </div>
   );

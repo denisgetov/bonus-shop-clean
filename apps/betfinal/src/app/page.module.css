@@ -1,31 +1,41 @@
 .page {
-  background-color: #dcc4c4; 
-  color: #d4af37; 
-  font-family: "Georgia", serif; 
-  border-radius: 0;
-  padding: 80px;
-  min-height: 100svh;
-  display: grid;
-  grid-template-rows: 20px 1fr 20px;
-  align-items: center;
-  justify-items: center;
-  gap: 64px;
-}
-
-a.primary {
-  background-color: #d4af37;
-  color: #000; 
-  border-radius: 0;
-  transition: background-color 0.2s ease;
-}
-
-a.primary:hover {
-  background-color: #b2932f;
-}
-
-button, .card {
-  border-radius: 0; 
+  min-height: 100vh;
   background-color: #000;
   color: #d4af37;
-  border: 1px solid #d4af37;
+  font-family: "Georgia", serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.heading {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.linkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 300px;
+}
+
+.primaryLink {
+  display: block;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #d4af37;
+  color: #d4af37;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.primaryLink:hover {
+  background-color: #d4af37;
+  color: #000;
 }
